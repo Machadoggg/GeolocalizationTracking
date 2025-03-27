@@ -2,6 +2,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR(); // Add SignalR
+builder.Services.AddSingleton<ICourierTrackingService, CourierTrackingService>();
 
 var app = builder.Build();
 
@@ -23,5 +25,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<CourierHub>("/courierHub"); // SignalR endpoint
 
 app.Run();
