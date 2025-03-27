@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using GeolocalizationTracking.Web.Services;
+using Microsoft.AspNetCore.SignalR;
 
 namespace GeolocalizationTracking.Web.Hubs
 {

@@ -1,3 +1,6 @@
+using GeolocalizationTracking.Web.Hubs;
+using GeolocalizationTracking.Web.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

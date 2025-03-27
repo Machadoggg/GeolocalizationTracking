@@ -1,8 +1,134 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Monitor de Mensajeros";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9">
+            <div id="map" style="height: 600px;"></div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Mensajeros Activos</h5>
+                </div>
+                <div class="card-body">
+                    <ul id="courierList" class="list-group">
+                        <!-- Los mensajeros se cargarán aquí -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    
+    <script>
+        // Configuración del mapa
+        const map = L.map('map').setView([19.4326, -99.1332], 12); // Centro en CDMX por defecto
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Marcadores de mensajeros
+        const courierMarkers = {};
+        
+        // Conexión SignalR
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/courierHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.on("ReceiveActiveCouriers", (couriers) => {
+            updateCourierList(couriers);
+            updateMapMarkers(couriers);
+        });
+
+        connection.on("LocationUpdated", (location) => {
+            updateCourierMarker(location);
+        });
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+                await connection.invoke("RequestCourierLocations");
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 5000);
+            }
+        }
+
+        connection.onclose(async () => {
+            await start();
+        });
+
+        start();
+
+        // Funciones de actualización
+        function updateCourierList(couriers) {
+            const list = document.getElementById('courierList');
+            list.innerHTML = '';
+            
+            couriers.forEach(courier => {
+                const item = document.createElement('li');
+                item.className = 'list-group-item d-flex justify-content-between align-items-center';
+                item.innerHTML = `
+                    Mensajero ${courier.courierId}
+                    <span class="badge bg-primary rounded-pill">${new Date(courier.timestamp).toLocaleTimeString()}</span>
+                `;
+                item.addEventListener('click', () => {
+                    map.setView([courier.latitude, courier.longitude], 15);
+                });
+                list.appendChild(item);
+            });
+        }
+
+        function updateMapMarkers(couriers) {
+            // Limpiar marcadores antiguos
+            Object.keys(courierMarkers).forEach(id => {
+                if (!couriers.some(c => c.courierId === id)) {
+                    map.removeLayer(courierMarkers[id]);
+                    delete courierMarkers[id];
+                }
+            });
+
+            // Añadir/actualizar marcadores
+            couriers.forEach(courier => {
+                updateCourierMarker(courier);
+            });
+        }
+
+        function updateCourierMarker(courier) {
+            const position = [courier.latitude, courier.longitude];
+            
+            if (courierMarkers[courier.courierId]) {
+                courierMarkers[courier.courierId].setLatLng(position);
+            } else {
+                const marker = L.marker(position, {
+                    icon: L.divIcon({
+                        className: 'courier-marker',
+                        html: '<i class="fas fa-bicycle fa-2x"></i>',
+                        iconSize: [30, 30]
+                    })
+                }).bindPopup(`<b>Mensajero ${courier.courierId}</b><br>Última actualización: ${new Date(courier.timestamp).toLocaleTimeString()}`);
+                
+                marker.addTo(map);
+                courierMarkers[courier.courierId] = marker;
+            }
+        }
+    </script>
+
+    <style>
+        .courier-marker i {
+            color: #007bff;
+        }
+        #map { 
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+}
