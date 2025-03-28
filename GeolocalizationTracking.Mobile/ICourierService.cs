@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using GeolocalizationTracking.Web.Models;
+using System.Collections.ObjectModel;
 
 namespace GeolocalizationTracking.Mobile
 {

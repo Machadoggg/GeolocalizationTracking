@@ -1,4 +1,6 @@
-﻿namespace GeolocalizationTracking.Mobile
+﻿using GeolocalizationTracking.Web.Models;
+
+namespace GeolocalizationTracking.Mobile
 {
     public class LocationService : ILocationService
     {

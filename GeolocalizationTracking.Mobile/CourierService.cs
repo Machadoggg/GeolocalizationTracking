@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using GeolocalizationTracking.Web.Models;
+using GeolocalizationTracking.Web.Hubs;
+using Microsoft.AspNetCore.SignalR.Client;
+using System.Collections.ObjectModel;
+//using GeolocalizationTracking.Web.Models;
 
 namespace GeolocalizationTracking.Mobile
 {
@@ -10,7 +14,7 @@ namespace GeolocalizationTracking.Mobile
         public async Task Connect()
         {
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://yourapi.com/locationHub")
+                .WithUrl("https://localhost:7035/")
                 .Build();
 
             _hubConnection.On<CourierLocation>("LocationUpdated", location =>
