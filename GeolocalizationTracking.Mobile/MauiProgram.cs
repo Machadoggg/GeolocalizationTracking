@@ -19,6 +19,12 @@ namespace GeolocalizationTracking.Mobile
     		builder.Logging.AddDebug();
 #endif
 
+            // Register services
+            builder.Services.AddSingleton<ILocationService, LocationService>();
+            builder.Services.AddSingleton<ICourierService, CourierService>();
+            builder.Services.AddSingleton<MainPage>();
+
+
             return builder.Build();
         }
     }
