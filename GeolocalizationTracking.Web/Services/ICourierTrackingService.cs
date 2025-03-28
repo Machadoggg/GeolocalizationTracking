@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using GeolocalizationTracking.Web.Models;
+using System.Collections.Concurrent;
 
 namespace GeolocalizationTracking.Web.Services
 {
