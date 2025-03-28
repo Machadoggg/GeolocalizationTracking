@@ -8,6 +8,16 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR(); // Add SignalR
 builder.Services.AddSingleton<ICourierTrackingService, CourierTrackingService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,6 +32,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowAll");
+
 
 app.UseAuthorization();
 
