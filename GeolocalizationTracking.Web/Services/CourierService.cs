@@ -8,14 +8,14 @@ namespace GeolocalizationTracking.Web.Services
     {
         private HubConnection _hubConnection;
 
-        public async Task Connect()
-        {
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://tudominio.com/courierHub")
-                .Build();
+        //public async Task Connect()
+        //{
+        //    _hubConnection = new HubConnectionBuilder()
+        //        .WithUrl("https://tudominio.com/courierHub")
+        //        .Build();
 
-            await _hubConnection.StartAsync();
-        }
+        //    await _hubConnection.StartAsync();
+        //}
 
         public IEnumerable<CourierLocation> GetActiveCouriers()
         {
