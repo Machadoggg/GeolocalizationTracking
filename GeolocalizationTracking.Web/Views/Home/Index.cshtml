@@ -167,7 +167,7 @@
         // Geolocalización del usuario (si acepta permisos)
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(position => {
-                const userCoords = [position.coords.latitude, position.coords.longitude];
+                const userCoords = [6.345953135931642, -75.53362629970499];/* [position.coords.latitude, position.coords.longitude]; */
                 L.marker(userCoords, {
                     icon: L.divIcon({
                         className: 'user-marker',
