@@ -24,7 +24,7 @@
         }
 
         .landmark-icon {
-            background-color: #e74c3c;
+            background-color: dodgerblue;
             border-radius: 50%;
             text-align: center;
             color: white;
@@ -50,21 +50,36 @@
 
         // Puntos de referencia importantes en Medellín
         const landmarks = [
+            // {
+            //     name: "Plaza Botero",
+            //     coords: [6.2518, -75.5636],
+            //     icon: "🎨"
+            // },
             {
-                name: "Plaza Botero",
+                name: "Mensajero 1",
                 coords: [6.2518, -75.5636],
-                icon: "🎨"
+                icon: "🚴"
             },
             {
-                name: "Parque Arví",
+                name: "Mensajero 2",
                 coords: [6.2847, -75.4931],
-                icon: "🌲"
+                icon: "🚴"
             },
             {
-                name: "Poblado",
+                name: "Mensajero 2",
                 coords: [6.2081, -75.5670],
-                icon: "🏢"
+                icon: "🚴"
             },
+            // {
+            //     name: "Parque Arví",
+            //     coords: [6.2847, -75.4931],
+            //     icon: "🌲"
+            // },
+            // {
+            //     name: "Poblado",
+            //     coords: [6.2081, -75.5670],
+            //     icon: "🏢"
+            // },
             {
                 name: "Aeropuerto MDE",
                 coords: [6.1646, -75.4231],
@@ -78,7 +93,7 @@
         // Capa de mapa base (OpenStreetMap)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            maxZoom: 18
+            maxZoom: 28
         }).addTo(map);
 
         // Marcador para el centro de Medellín
@@ -103,7 +118,9 @@
             const div = L.DomUtil.create('div', 'legend');
             div.innerHTML = `
                         <h4>Leyenda</h4>
-                        🚴 Mensajero activo<br>
+                        🚴 Mensajero 1<br>
+                        🚴 Mensajero 2<br>
+                        🚴 Mensajero 3<br>
                         🔴 Mensajero inactivo<br>
                         🔵 Tu ubicación<br>
                         🎨 Puntos de interés
@@ -167,7 +184,8 @@
         // Geolocalización del usuario (si acepta permisos)
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(position => {
-                const userCoords = [6.345953135931642, -75.53362629970499];/* [position.coords.latitude, position.coords.longitude]; */
+                const userCoords = [position.coords.latitude, position.coords.longitude];
+                // Coodenadas Florida Norte America [6.345953135931642, -75.53362629970499];
                 L.marker(userCoords, {
                     icon: L.divIcon({
                         className: 'user-marker',
